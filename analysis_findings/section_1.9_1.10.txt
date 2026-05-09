@@ -1,4 +1,4 @@
-=== Section 1.9-1.10 — Baseline Model Results ===
+=== Section 1.9-1.10 - Baseline Model Results ===
 
 Model            Accuracy  Precision     Recall        F1
 Most Frequent:    >99.8%       0.0%       0.0%       0.0%  (predicts all non-fraud)

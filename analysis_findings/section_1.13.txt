@@ -1,4 +1,4 @@
-=== Section 1.13 — Recall-Focused Refinement ===
+=== Section 1.13 - Recall-Focused Refinement ===
 
 Lowering decision threshold increases recall at the cost of precision.
 

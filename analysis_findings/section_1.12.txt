@@ -1,4 +1,4 @@
-=== Section 1.12 — Hyperparameter Tuning Results ===
+=== Section 1.12 - Hyperparameter Tuning Results ===
 
 CV done on original (non-SMOTEd) data to avoid leakage.
 
@@ -16,4 +16,4 @@ Logistic Regression:
 
 Tree models show modest gains from tuning (RF already strong at defaults).
 Grid search over deeper trees and more estimators marginally improves XGBoost.
-LR remains uncompetitive regardless of C — linear boundary insufficient.
+LR remains uncompetitive regardless of C - linear boundary insufficient.

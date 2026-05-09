@@ -1,5 +1,5 @@
 """
-Credit Card Fraud Deep Analysis — Sections 1.6 through 1.17
+Credit Card Fraud Deep Analysis - Sections 1.6 through 1.17
 Run:  python credit_card_deep_analysis.py
 """
 
@@ -68,7 +68,7 @@ def section_1_6_multivariate_analysis():
     v_features = [c for c in df.columns if c.startswith("V")]
     analysis_features = v_features[:6] + ["Amount", "Time"]  # manageable set
 
-    # 1.6.2 — Correlation matrix among features
+    # 1.6.2 - Correlation matrix among features
     corr = df[v_features].corr()
     high_corr_pairs = []
     for i in range(len(corr.columns)):
@@ -78,7 +78,7 @@ def section_1_6_multivariate_analysis():
                 high_corr_pairs.append((corr.columns[i], corr.columns[j], val))
     high_corr_pairs.sort(key=lambda x: abs(x[2]), reverse=True)
 
-    # 1.6.3 — Heatmap of top correlated features
+    # 1.6.3 - Heatmap of top correlated features
     top_corr_features = list(set(
         [p[0] for p in high_corr_pairs[:6]] + [p[1] for p in high_corr_pairs[:6]]
     ))
@@ -97,10 +97,10 @@ def section_1_6_multivariate_analysis():
             ax.text(j, i, f"{sub_corr.iloc[i,j]:.2f}", ha="center", va="center",
                     fontsize=7, color="white" if abs(sub_corr.iloc[i,j]) > 0.6 else "black")
     fig.colorbar(im, ax=ax, shrink=0.8)
-    ax.set_title("Credit Card — Feature Correlation Matrix\n(Highly Correlated Pairs)", fontsize=12, fontweight="bold")
+    ax.set_title("Credit Card - Feature Correlation Matrix\n(Highly Correlated Pairs)", fontsize=12, fontweight="bold")
     save_fig(fig, "credit_card_multivariate_corr")
 
-    # 1.6.4 — Pairwise scatter of top V features with fraud overlay
+    # 1.6.4 - Pairwise scatter of top V features with fraud overlay
     pairwise_feats = v_features[:5]
     nf_sample = nonfraud.sample(min(1000, len(nonfraud)), random_state=42)
     fig, axes = plt.subplots(len(pairwise_feats), len(pairwise_feats),
@@ -123,11 +123,11 @@ def section_1_6_multivariate_analysis():
                 ax.axis("off")
             if i == 0 and j == 1:
                 ax.legend(fontsize=6, loc="upper right")
-    fig.suptitle("Credit Card — Pairwise Feature Scatter\n(Fraud in Red, Non-Fraud in Blue)", fontsize=13, fontweight="bold")
+    fig.suptitle("Credit Card - Pairwise Feature Scatter\n(Fraud in Red, Non-Fraud in Blue)", fontsize=13, fontweight="bold")
     plt.tight_layout()
     save_fig(fig, "credit_card_pairwise_scatter")
 
-    # 1.6.6 — Fraud rate by Amount range and Time (hour)
+    # 1.6.6 - Fraud rate by Amount range and Time (hour)
     df_temp = df.copy()
     df_temp["amount_bin"] = pd.qcut(df_temp["Amount"].clip(upper=df_temp["Amount"].quantile(0.98)),
                                       q=10, duplicates="drop")
@@ -148,7 +148,7 @@ def section_1_6_multivariate_analysis():
             labels.append(str(b))
     ax.set_xticklabels(labels, fontsize=8, rotation=45, ha="right")
     ax.set_ylabel("Fraud Rate (%)", fontsize=11)
-    ax.set_title("Credit Card — Fraud Rate by Amount Decile\n(98th percentile cap)", fontsize=12, fontweight="bold")
+    ax.set_title("Credit Card - Fraud Rate by Amount Decile\n(98th percentile cap)", fontsize=12, fontweight="bold")
     ax.legend(fontsize=9)
     ax.spines[["top", "right"]].set_visible(False)
     save_fig(fig, "credit_card_fraud_rate_by_amount")
@@ -157,7 +157,7 @@ def section_1_6_multivariate_analysis():
     if high_corr_pairs:
         top_pair_str = f"{high_corr_pairs[0][0]} vs {high_corr_pairs[0][1]} (r={high_corr_pairs[0][2]:.3f})"
 
-    findings = f"""=== Section 1.6 — Multivariate Analysis Findings ===
+    findings = f"""=== Section 1.6 - Multivariate Analysis Findings ===
 
 Feature Set: {len(v_features)} PCA components (V1-V28), Amount, Time
 Highly correlated feature pairs (|r| > 0.5): {len(high_corr_pairs)} pairs found
@@ -182,7 +182,7 @@ def section_1_7_weirdness_outlier():
     fraud = df[df[TARGET] == 1]
     nonfraud = df[df[TARGET] == 0]
 
-    # 1.7.1 — Amount outliers using IQR
+    # 1.7.1 - Amount outliers using IQR
     q1, q3 = df["Amount"].quantile(0.25), df["Amount"].quantile(0.75)
     iqr_amt = q3 - q1
     lower, upper = q1 - 1.5*iqr_amt, q3 + 1.5*iqr_amt
@@ -191,7 +191,7 @@ def section_1_7_weirdness_outlier():
     print(f"  IQR outliers (Amount): {len(outliers)} ({len(outliers)/len(df)*100:.2f}%)")
     print(f"  Fraud cases among outliers: {len(fraud_outliers)} ({len(fraud_outliers)/len(fraud)*100:.1f}% of all fraud)")
 
-    # 1.7.2 — LogAmount outlier check
+    # 1.7.2 - LogAmount outlier check
     log_amt = np.log1p(df["Amount"])
     lq1, lq3 = log_amt.quantile(0.25), log_amt.quantile(0.75)
     liqr = lq3 - lq1
@@ -201,7 +201,7 @@ def section_1_7_weirdness_outlier():
     print(f"  LogAmount IQR outliers: {len(log_outliers)} ({len(log_outliers)/len(df)*100:.2f}%)")
     print(f"  Fraud among LogAmount outliers: {len(fraud_log_outliers)} ({len(fraud_log_outliers)/len(fraud)*100:.1f}% of all fraud)")
 
-    # 1.7.3 — Weirdness score across V features
+    # 1.7.3 - Weirdness score across V features
     v_cols = [c for c in df.columns if c.startswith("V")]
     nonfraud_mean = nonfraud[v_cols].mean()
     nonfraud_std = nonfraud[v_cols].std().replace(0, 1)
@@ -233,7 +233,7 @@ def section_1_7_weirdness_outlier():
     plt.tight_layout()
     save_fig(fig, "credit_card_weirdness_scores")
 
-    # 1.7.5 — Robust weirdness score (trimmed mean/std)
+    # 1.7.5 - Robust weirdness score (trimmed mean/std)
     trimmed_nonfraud = nonfraud[v_cols]
     for col in v_cols:
         lo, hi = trimmed_nonfraud[col].quantile(0.01), trimmed_nonfraud[col].quantile(0.99)
@@ -249,7 +249,7 @@ def section_1_7_weirdness_outlier():
         v_separation[col] = ks_stat
     top_sep = sorted(v_separation.items(), key=lambda x: x[1], reverse=True)[:5]
 
-    findings = f"""=== Section 1.7 — Weirdness and Outlier Analysis Findings ===
+    findings = f"""=== Section 1.7 - Weirdness and Outlier Analysis Findings ===
 
 Amount IQR Outliers:
   Outlier threshold: ${upper:.2f}
@@ -272,7 +272,7 @@ Top 5 V features separating fraud from non-fraud (KS test statistic):
         findings += f"  {col}: KS={stat:.4f}\n"
 
     findings += f"""
-Key finding: Weirdness score is a useful meta-feature — fraud cases consistently show
+Key finding: Weirdness score is a useful meta-feature - fraud cases consistently show
 higher deviation from the non-fraud centroid across all PCA features.
 """
     write_findings("1.7", findings)
@@ -283,10 +283,10 @@ def section_1_8_preprocessing_decisions():
     print_sep("1.8 PREPROCESSING AND MODELLING DECISIONS")
     df = DF.copy()
 
-    findings = """=== Section 1.8 — Preprocessing and Modelling Decisions ===
+    findings = """=== Section 1.8 - Preprocessing and Modelling Decisions ===
 
 Decision Summary:
-1. Features: All 30 columns (V1-V28, Amount, Time) used. No feature selection — PCA
+1. Features: All 30 columns (V1-V28, Amount, Time) used. No feature selection - PCA
    features are already engineered, and tree models handle irrelevant features.
 
 2. Train-test split: 80/20 stratified split preserving 0.17% fraud rate in both sets.
@@ -340,7 +340,7 @@ def section_1_9_1_10_baseline():
         roc = roc_auc_score(y_test, y_prob)
         print(f"  {name:20s} {acc:>10.4f} {prec:>10.4f} {rec:>10.4f} {f1:>10.4f}")
 
-    findings = """=== Section 1.9-1.10 — Baseline Model Results ===
+    findings = """=== Section 1.9-1.10 - Baseline Model Results ===
 
 Model            Accuracy  Precision     Recall        F1
 Most Frequent:    >99.8%       0.0%       0.0%       0.0%  (predicts all non-fraud)
@@ -444,7 +444,7 @@ def section_1_11_imbalance_experiments(X_train, X_test, y_train, y_test):
     print(res_df.to_string(index=False))
 
     best_f1 = res_df.loc[res_df["f1"].idxmax()]
-    findings = f"""=== Section 1.11 — Imbalance-Handling Experiments ===
+    findings = f"""=== Section 1.11 - Imbalance-Handling Experiments ===
 
 Models tested per strategy: Random Forest (100 trees), XGBoost (100 estimators), Logistic Regression
 Strategies compared: No handling, SMOTE, ADASYN, Random Undersample, Class Weight
@@ -459,7 +459,7 @@ Best overall: {best_f1['model']} with {best_f1['strategy']} (F1={best_f1['f1']:.
     findings += """
 Key insight: SMOTE generally improves recall at modest precision cost compared to no handling.
 Class weight provides a similar effect without generating synthetic data.
-Random undersample loses too much data — F1 suffers.
+Random undersample loses too much data - F1 suffers.
 """
     write_findings("1.11", findings)
     print(findings)
@@ -571,7 +571,7 @@ def section_1_12_hyperparameter_tuning(X_train, X_test, y_train, y_test):
     plt.tight_layout()
     save_fig(fig, "credit_card_tuning_comparison")
 
-    findings = f"""=== Section 1.12 — Hyperparameter Tuning Results ===
+    findings = f"""=== Section 1.12 - Hyperparameter Tuning Results ===
 
 XGBoost:
   Best params: {xgb_best}
@@ -667,7 +667,7 @@ def section_1_13_recall_refinement(X_train, X_test, y_train, y_test):
     plt.tight_layout()
     save_fig(fig, "credit_card_recall_refinement")
 
-    findings = "=== Section 1.13 — Recall-Focused Refinement ===\n\n"
+    findings = "=== Section 1.13 - Recall-Focused Refinement ===\n\n"
     findings += "Approach: Increase positive-class weight, add more trees, lower decision threshold to 0.3\n\n"
     for r in recall_results:
         findings += f"  {r['model']:10s} F1={r['f1']:.3f}  Recall={r['recall']:.3f}  Precision={r['precision']:.3f}\n"
@@ -736,7 +736,7 @@ def section_1_14_threshold_tuning(y_test, tuned_models):
     best_f2_per_model = res_df.loc[res_df.groupby("model")["f2"].idxmax()].copy()
     best_cost_per_model = res_df.loc[res_df.groupby("model")["cost"].idxmin()].copy()
 
-    findings = "=== Section 1.14 — Threshold Tuning ===\n\n"
+    findings = "=== Section 1.14 - Threshold Tuning ===\n\n"
     findings += "Assumed costs: FN=$100 (missed fraud), FP=$1 (false alarm)\n\n"
 
     findings += "Best threshold by F1:\n"
@@ -841,7 +841,7 @@ def section_1_15_cost_optimization(y_test, tuned_models, threshold_results):
     sub = opt_df[(opt_df["cost_fn"] == rec_cost_fn) & (opt_df["cost_fp"] == rec_cost_fp)]
     best_row = sub.loc[sub["cost"].idxmin()]
 
-    findings = "=== Section 1.15 — Cost-Based Optimization Using Z ===\n\n"
+    findings = "=== Section 1.15 - Cost-Based Optimization Using Z ===\n\n"
     findings += f"Objective Function:  Z = cost_fn × FN + cost_fp × FP\n\n"
     findings += f"At assumed costs (FN=${rec_cost_fn}, FP=${rec_cost_fp}):\n\n"
 
@@ -913,7 +913,7 @@ def section_1_16_final_refinement(y_test, tuned_models, best_row):
     lines1, labels1 = ax1.get_legend_handles_labels()
     lines2, labels2 = ax2.get_legend_handles_labels()
     ax1.legend(lines1 + lines2, labels1 + labels2, fontsize=9, loc="center right")
-    ax1.set_title(f"Fine Threshold Search — {model_name.upper()}\nAround Optimal Region",
+    ax1.set_title(f"Fine Threshold Search - {model_name.upper()}\nAround Optimal Region",
                   fontsize=13, fontweight="bold")
     ax1.spines[["top"]].set_visible(False)
     plt.tight_layout()
@@ -922,7 +922,7 @@ def section_1_16_final_refinement(y_test, tuned_models, best_row):
     best_idx = fine_df["cost"].idxmin()
     final_thresh = fine_df.loc[best_idx, "threshold"]
 
-    findings = f"""=== Section 1.16 — Final Refinement and Stability Check ===
+    findings = f"""=== Section 1.16 - Final Refinement and Stability Check ===
 
 Model: {model_name.upper()}
 Fine search range: [{fine_thresholds[0]:.3f}, {fine_thresholds[-1]:.3f}]
@@ -930,7 +930,7 @@ Fine search range: [{fine_thresholds[0]:.3f}, {fine_thresholds[-1]:.3f}]
 Best threshold from coarse grid: {best_row['best_threshold']:.2f} with cost ${best_row['cost']:.0f}
 Best threshold from fine search: {final_thresh:.3f} with cost ${fine_df.loc[best_idx, 'cost']:.0f}
 
-Stability: Cost varies smoothly around the optimum — the region {final_thresh-0.02:.3f} to
+Stability: Cost varies smoothly around the optimum - the region {final_thresh-0.02:.3f} to
 {final_thresh+0.02:.3f} has cost within ±1% of minimum. This means the threshold choice
 is robust to small calibration errors in production.
 
@@ -949,7 +949,7 @@ def section_1_17_final_selection(final_thresh, best_row, y_test, tuned_models):
     pred = (prob >= final_thresh).astype(int)
     tn, fp, fn, tp = confusion_matrix(y_test, pred).ravel()
 
-    findings = f"""Section 1.17 — Final Model Selection and Conclusion
+    findings = f"""Section 1.17 - Final Model Selection and Conclusion
 
                     FINAL MODEL RECOMMENDATION
 

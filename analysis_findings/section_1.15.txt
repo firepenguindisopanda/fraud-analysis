@@ -1,4 +1,4 @@
-=== Section 1.15 — Cost-Based Optimization Using Z ===
+=== Section 1.15 - Cost-Based Optimization Using Z ===
 
 Z = 100 × FN + 1 × FP
 

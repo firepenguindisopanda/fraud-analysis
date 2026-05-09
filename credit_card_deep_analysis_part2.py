@@ -1,5 +1,5 @@
 """
-Credit Card Deep Analysis — Sections 1.12 to 1.17 (Continuation)
+Credit Card Deep Analysis - Sections 1.12 to 1.17 (Continuation)
 Run:  python credit_card_deep_analysis_part2.py
 """
 
@@ -62,7 +62,7 @@ X_te_sc = scaler.transform(X_test)
 def section_1_12_tuning():
     print_sep("1.12 HYPERPARAMETER TUNING")
 
-    # XGBoost — use CV on ORIGINAL training data (not SMOTEd) to avoid leakage
+    # XGBoost - use CV on ORIGINAL training data (not SMOTEd) to avoid leakage
     print("\n  --- XGBoost Grid Search (CV on original data) ---")
     cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
     xgb_params = {'learning_rate': [0.05, 0.1], 'max_depth': [4, 6, 8],
@@ -84,7 +84,7 @@ def section_1_12_tuning():
     xgb_prec = precision_score(y_test, xgb_pred, zero_division=0)
     print(f"  XGB Test F1={xgb_f1:.4f}  Recall={xgb_rec:.4f}  Precision={xgb_prec:.4f}")
 
-    # Random Forest — tiny grid
+    # Random Forest - tiny grid
     print("\n  --- Random Forest Grid Search ---")
     rf_params = {'n_estimators': [100, 200], 'max_depth': [10, 20],
                  'min_samples_leaf': [1, 5]}
@@ -150,7 +150,7 @@ def section_1_12_tuning():
         ax.set_xticks(x)
         ax.set_xticklabels(model_names, fontsize=10)
         ax.set_ylabel(metric_name, fontsize=11)
-        ax.set_title(f"Tuning — {metric_name}", fontsize=12, fontweight="bold")
+        ax.set_title(f"Tuning - {metric_name}", fontsize=12, fontweight="bold")
         ax.spines[["top", "right"]].set_visible(False)
         if ax == axes[0]:
             ax.legend(fontsize=9)
@@ -158,7 +158,7 @@ def section_1_12_tuning():
     plt.tight_layout()
     save_fig(fig, "credit_card_tuning_comparison")
 
-    findings = f"""Section 1.12 — Hyperparameter Tuning Results
+    findings = f"""Section 1.12 - Hyperparameter Tuning Results
 
 CV done on original (non-SMOTEd) data to avoid leakage.
 
@@ -176,7 +176,7 @@ Logistic Regression:
 
 Tree models show modest gains from tuning (RF already strong at defaults).
 Grid search over deeper trees and more estimators marginally improves XGBoost.
-LR remains uncompetitive regardless of C — linear boundary insufficient.
+LR remains uncompetitive regardless of C - linear boundary insufficient.
 """
     write_findings("1.12", findings)
     print(findings)
@@ -220,11 +220,11 @@ def section_1_13_recall(tuned_models):
         ax.legend(fontsize=8)
         ax.spines[["top", "right"]].set_visible(False)
         ax.set_ylim(0, 1.05)
-    plt.suptitle("Recall-Focused Refinement — Threshold Sweep", fontsize=13, fontweight="bold")
+    plt.suptitle("Recall-Focused Refinement - Threshold Sweep", fontsize=13, fontweight="bold")
     plt.tight_layout()
     save_fig(fig, "credit_card_recall_refinement")
 
-    findings = "Section 1.13 — Recall-Focused Refinement\n\n"
+    findings = "Section 1.13 - Recall-Focused Refinement\n\n"
     findings += "Lowering decision threshold increases recall at the cost of precision.\n\n"
     for _, row in best_per_model.iterrows():
         findings += f"  {row['model'].upper():5s} best F1 @ {row['threshold']:.2f}:  "
@@ -276,7 +276,7 @@ def section_1_14_threshold(tuned_models):
         ax.legend(fontsize=8)
         ax.set_ylim(-0.05, 1.05)
         ax.spines[["top", "right"]].set_visible(False)
-    plt.suptitle("Threshold Tuning — F1, F2, Recall, Precision vs Decision Threshold", fontsize=13, fontweight="bold")
+    plt.suptitle("Threshold Tuning - F1, F2, Recall, Precision vs Decision Threshold", fontsize=13, fontweight="bold")
     plt.tight_layout()
     save_fig(fig, "credit_card_threshold_tuning")
 
@@ -284,7 +284,7 @@ def section_1_14_threshold(tuned_models):
     best_f2 = res_df.loc[res_df.groupby("model")["f2"].idxmax()]
     best_cost = res_df.loc[res_df.groupby("model")["cost"].idxmin()]
 
-    findings = "Section 1.14 — Threshold Tuning\n\n"
+    findings = "Section 1.14 - Threshold Tuning\n\n"
     findings += "Assume: FN=$100, FP=$1\n\nBest by F1:\n"
     for _, r in best_f1.iterrows():
         findings += f"  {r['model'].upper():5s} @ {r['threshold']:.2f}  F1={r['f1']:.3f}  F2={r['f2']:.3f}  Recall={r['recall']:.3f}  Prec={r['precision']:.3f}  Cost=${r['cost']:.0f}\n"
@@ -362,7 +362,7 @@ def section_1_15_cost_opt(tuned_models):
     sub = opt_df[(opt_df["cost_fn"] == 100) & (opt_df["cost_fp"] == 1)]
     best_row = sub.loc[sub["cost"].idxmin()]
 
-    findings = "=== Section 1.15 — Cost-Based Optimization Using Z ===\n\n"
+    findings = "=== Section 1.15 - Cost-Based Optimization Using Z ===\n\n"
     findings += "Z = 100 × FN + 1 × FP\n\n"
     for _, r in sub.sort_values("cost").iterrows():
         findings += f"  {r['model'].upper():5s}  thresh={r['threshold']:.2f}  Z=${r['cost']:.0f}  F1={r['f1']:.3f}  TP={r['tp']}  FN={r['fn']}  FP={r['fp']}\n"
@@ -408,14 +408,14 @@ def section_1_16_final(best_row, tuned_models):
     l1, la1 = ax1.get_legend_handles_labels()
     l2, la2 = ax2.get_legend_handles_labels()
     ax1.legend(l1 + l2, la1 + la2, fontsize=9, loc="center right")
-    ax1.set_title(f"Fine Threshold Search — {model_name.upper()} Around Optimal Region", fontsize=12, fontweight="bold")
+    ax1.set_title(f"Fine Threshold Search - {model_name.upper()} Around Optimal Region", fontsize=12, fontweight="bold")
     ax1.spines[["top"]].set_visible(False)
     plt.tight_layout()
     save_fig(fig, "credit_card_final_refinement")
 
     best_idx = fine_df["cost"].idxmin()
     final_thresh = fine_df.loc[best_idx, "threshold"]
-    findings = f"""=== Section 1.16 — Final Refinement and Stability ===
+    findings = f"""=== Section 1.16 - Final Refinement and Stability ===
 
 Model: {model_name.upper()}
 Fine search: [{lo:.3f}, {hi:.3f}] in 0.005 steps
@@ -437,7 +437,7 @@ def section_1_17_final(final_thresh, best_row, tuned_models):
     pred = (prob >= final_thresh).astype(int)
     tn, fp, fn, tp = confusion_matrix(y_test, pred).ravel()
 
-    findings = f"""=== Section 1.17 — Final Model Selection and Conclusion ===
+    findings = f"""=== Section 1.17 - Final Model Selection and Conclusion ===
 
 FINAL MODEL RECOMMENDATION
 
@@ -460,8 +460,8 @@ Business Impact:
   - At assumed costs, total cost is ${100*fn + 1*fp:,} per {tn+fp+tp+fn:,} transactions
 
 Key Conclusions:
-1. Credit card fraud detection is highly feasible — RF achieves F1 > 0.83
-2. Threshold tuning matters — default 0.5 is rarely optimal for imbalanced data
+1. Credit card fraud detection is highly feasible - RF achieves F1 > 0.83
+2. Threshold tuning matters - default 0.5 is rarely optimal for imbalanced data
 3. Cost-based optimization (Z) aligns model choice with business value
 4. PCA features enable strong separation but require non-linear models
 5. SMOTE + threshold tuning > SMOTE alone > no imbalance handling

@@ -1,4 +1,4 @@
-=== Section 1.6 — Multivariate Analysis Findings ===
+=== Section 1.6 - Multivariate Analysis Findings ===
 
 Feature Set: 28 PCA components (V1-V28), Amount, Time
 Highly correlated feature pairs (|r| > 0.5): 0 pairs found

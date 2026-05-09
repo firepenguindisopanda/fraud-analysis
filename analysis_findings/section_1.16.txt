@@ -1,4 +1,4 @@
-=== Section 1.16 — Final Refinement and Stability ===
+=== Section 1.16 - Final Refinement and Stability ===
 
 Model: RF
 Fine search: [0.100, 0.300] in 0.005 steps

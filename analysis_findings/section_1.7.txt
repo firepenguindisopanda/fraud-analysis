@@ -1,4 +1,4 @@
-=== Section 1.7 — Weirdness and Outlier Analysis Findings ===
+=== Section 1.7 - Weirdness and Outlier Analysis Findings ===
 
 Amount IQR Outliers:
   Outlier threshold: $184.51
@@ -22,5 +22,5 @@ Top 5 V features separating fraud from non-fraud (KS test statistic):
   V4: KS=0.7664
   V11: KS=0.7561
 
-Key finding: Weirdness score is a useful meta-feature — fraud cases consistently show
+Key finding: Weirdness score is a useful meta-feature - fraud cases consistently show
 higher deviation from the non-fraud centroid across all PCA features.

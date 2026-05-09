@@ -1,4 +1,4 @@
-=== Section 1.14 — Threshold Tuning ===
+=== Section 1.14 - Threshold Tuning ===
 
 Assume: FN=$100, FP=$1
 

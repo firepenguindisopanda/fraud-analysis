@@ -1,4 +1,4 @@
-=== Section 1.17 — Final Model Selection and Conclusion ===
+=== Section 1.17 - Final Model Selection and Conclusion ===
 
 FINAL MODEL RECOMMENDATION
 ═══════════════════════════
@@ -22,8 +22,8 @@ Business Impact:
   - At assumed costs, total cost is $1,028 per 56,962 transactions
 
 Key Conclusions:
-1. Credit card fraud detection is highly feasible — RF achieves F1 > 0.83
-2. Threshold tuning matters — default 0.5 is rarely optimal for imbalanced data
+1. Credit card fraud detection is highly feasible - RF achieves F1 > 0.83
+2. Threshold tuning matters - default 0.5 is rarely optimal for imbalanced data
 3. Cost-based optimization (Z) aligns model choice with business value
 4. PCA features enable strong separation but require non-linear models
 5. SMOTE + threshold tuning > SMOTE alone > no imbalance handling

@@ -1,7 +1,7 @@
-=== Section 1.8 — Preprocessing and Modelling Decisions ===
+=== Section 1.8 - Preprocessing and Modelling Decisions ===
 
 Decision Summary:
-1. Features: All 30 columns (V1-V28, Amount, Time) used. No feature selection — PCA
+1. Features: All 30 columns (V1-V28, Amount, Time) used. No feature selection - PCA
    features are already engineered, and tree models handle irrelevant features.
 
 2. Train-test split: 80/20 stratified split preserving 0.17% fraud rate in both sets.

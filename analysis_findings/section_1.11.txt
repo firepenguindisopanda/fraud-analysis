@@ -1,4 +1,4 @@
-=== Section 1.11 — Imbalance-Handling Experiments ===
+=== Section 1.11 - Imbalance-Handling Experiments ===
 
 Models tested per strategy: Random Forest (100 trees), XGBoost (100 estimators), Logistic Regression
 Strategies compared: No handling, SMOTE, ADASYN, Random Undersample, Class Weight
@@ -12,4 +12,4 @@ Best overall: RF with No Handling (F1=0.874)
 
 Key insight: SMOTE generally improves recall at modest precision cost compared to no handling.
 Class weight provides a similar effect without generating synthetic data.
-Random undersample loses too much data — F1 suffers.
+Random undersample loses too much data - F1 suffers.
