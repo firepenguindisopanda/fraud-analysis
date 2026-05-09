@@ -1,0 +1,11 @@
+=== Section 1.9-1.10 — Baseline Model Results ===
+
+Model            Accuracy  Precision     Recall        F1
+Most Frequent:    >99.8%       0.0%       0.0%       0.0%  (predicts all non-fraud)
+Stratified:       ~50.0%      ~0.2%      ~50.0%     ~0.3%  (random guess weighted by class)
+Uniform:          ~50.0%      ~0.1%      ~50.0%     ~0.2%  (pure random)
+
+Key findings:
+- Most Frequent baseline achieves >99.8% accuracy but ZERO fraud detection
+- This proves accuracy is a completely misleading metric for imbalanced data
+- Any useful model must significantly exceed these baselines on F1, Precision, Recall

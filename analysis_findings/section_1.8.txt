@@ -1,0 +1,23 @@
+=== Section 1.8 — Preprocessing and Modelling Decisions ===
+
+Decision Summary:
+1. Features: All 30 columns (V1-V28, Amount, Time) used. No feature selection — PCA
+   features are already engineered, and tree models handle irrelevant features.
+
+2. Train-test split: 80/20 stratified split preserving 0.17% fraud rate in both sets.
+   Test set: ~56,962 rows (~98 fraud cases).
+
+3. Leakage control: All preprocessing (log transform, scaling) fit ONLY on training data.
+   SMOTE applied AFTER split to avoid synthetic samples leaking across train/test.
+
+4. Imbalance strategy: SMOTE (Synthetic Minority Oversampling) applied to training set.
+   Alternative strategies (class_weight, undersampling) compared in Section 1.11.
+   SMOTE chosen because it generates synthetic fraud cases rather than discarding data.
+
+5. Scaling: StandardScaler applied AFTER SMOTE to avoid scaling synthetic samples
+   relative to non-synthetic distributions.
+
+6. Log transform: Applied to any numeric feature with |skew| > 1. Inf values
+   replaced with NaN then median-imputed.
+
+7. No categorical features to encode (credit card dataset is all numeric PCA features).

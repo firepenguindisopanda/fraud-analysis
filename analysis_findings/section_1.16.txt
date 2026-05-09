@@ -1,0 +1,8 @@
+=== Section 1.16 — Final Refinement and Stability ===
+
+Model: RF
+Fine search: [0.100, 0.300] in 0.005 steps
+Coarse optimum: 0.200 (cost $1028)
+Fine optimum:   0.200 (cost $1028)
+Cost stable within ±1% for thresholds in ±0.02 of optimum.
+Final recommendation: 0.200

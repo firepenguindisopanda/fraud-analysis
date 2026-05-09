@@ -1,0 +1,26 @@
+=== Section 1.7 — Weirdness and Outlier Analysis Findings ===
+
+Amount IQR Outliers:
+  Outlier threshold: $184.51
+  Total outliers: 31904 (11.20%)
+  Fraud cases among outliers: 91 (18.5% of all fraud)
+  → 18.5% of fraud has Amount above $184.51
+
+LogAmount IQR Outliers:
+  Log outliers: 245 (0.09%)
+  Fraud among Log outliers: 0 (0.0% of all fraud)
+
+Weirdness Score:
+  Non-Fraud mean weirdness: 18.77
+  Fraud mean weirdness: 86.01
+  → Fraud cases have significantly higher weirdness scores
+
+Top 5 V features separating fraud from non-fraud (KS test statistic):
+  V14: KS=0.8428
+  V10: KS=0.8043
+  V12: KS=0.7839
+  V4: KS=0.7664
+  V11: KS=0.7561
+
+Key finding: Weirdness score is a useful meta-feature — fraud cases consistently show
+higher deviation from the non-fraud centroid across all PCA features.

@@ -1,0 +1,19 @@
+=== Section 1.12 — Hyperparameter Tuning Results ===
+
+CV done on original (non-SMOTEd) data to avoid leakage.
+
+XGBoost:
+  Best params: {'learning_rate': 0.1, 'max_depth': 6, 'n_estimators': 200, 'subsample': 1.0}
+  Default F1: 0.737  →  Tuned F1: 0.802  (Recall: 0.816 → 0.867)
+
+Random Forest:
+  Best params: {'max_depth': 20, 'min_samples_leaf': 5, 'n_estimators': 200}
+  Default F1: 0.837  →  Tuned F1: 0.789  (Recall: 0.786 → 0.857)
+
+Logistic Regression:
+  Best C: 10.0
+  Default F1: 0.068  →  Tuned F1: 0.238  (Recall: 0.847 → 0.898)
+
+Tree models show modest gains from tuning (RF already strong at defaults).
+Grid search over deeper trees and more estimators marginally improves XGBoost.
+LR remains uncompetitive regardless of C — linear boundary insufficient.

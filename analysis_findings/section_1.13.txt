@@ -1,0 +1,10 @@
+=== Section 1.13 — Recall-Focused Refinement ===
+
+Lowering decision threshold increases recall at the cost of precision.
+
+  LR    best F1 @ 0.30:  F1=0.137  Recall=0.908  Precision=0.074
+  RF    best F1 @ 0.30:  F1=0.667  Recall=0.888  Precision=0.534
+  XGB   best F1 @ 0.30:  F1=0.762  Recall=0.867  Precision=0.680
+
+Key finding: Lowering threshold from 0.5 to 0.3-0.4 improves both recall and F1 for most models.
+The best threshold depends on your tolerance for false positives.

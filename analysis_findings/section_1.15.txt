@@ -1,0 +1,11 @@
+=== Section 1.15 — Cost-Based Optimization Using Z ===
+
+Z = 100 × FN + 1 × FP
+
+  RF     thresh=0.20  Z=$1028  F1=0.565  TP=89  FN=9  FP=128
+  XGB    thresh=0.15  Z=$1166  F1=0.693  TP=87  FN=11  FP=66
+  LR     thresh=0.94  Z=$1183  F1=0.649  TP=87  FN=11  FP=83
+
+Optimal: RF @ 0.20 → Z=$1028
+  Catches 89/98 fraud (91%)
+  128 false alarms (41% precision)

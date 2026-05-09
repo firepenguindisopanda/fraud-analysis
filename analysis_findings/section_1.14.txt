@@ -1,0 +1,18 @@
+=== Section 1.14 — Threshold Tuning ===
+
+Assume: FN=$100, FP=$1
+
+Best by F1:
+  LR    @ 0.90  F1=0.556  F2=0.717  Recall=0.888  Prec=0.405  Cost=$1228
+  RF    @ 0.80  F1=0.851  F2=0.830  Recall=0.816  Prec=0.889  Cost=$1810
+  XGB   @ 0.90  F1=0.859  F2=0.845  Recall=0.837  Prec=0.882  Cost=$1611
+
+Best by F2 (recall-focused):
+  LR    @ 0.90  F1=0.556  F2=0.717  Recall=0.888  Prec=0.405  Cost=$1228
+  RF    @ 0.45  F1=0.789  F2=0.840  Recall=0.878  Prec=0.717  Cost=$1234
+  XGB   @ 0.70  F1=0.836  F2=0.848  Recall=0.857  Prec=0.816  Cost=$1419
+
+Best by Total Cost ($100×FN + $1×FP):
+  LR    @ 0.90  Cost=$1228  F1=0.556  Recall=0.888  Prec=0.405
+  RF    @ 0.20  Cost=$1028  F1=0.565  Recall=0.908  Prec=0.410
+  XGB   @ 0.15  Cost=$1166  F1=0.693  Recall=0.888  Prec=0.569

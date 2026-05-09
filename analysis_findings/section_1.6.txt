@@ -1,0 +1,14 @@
+=== Section 1.6 — Multivariate Analysis Findings ===
+
+Feature Set: 28 PCA components (V1-V28), Amount, Time
+Highly correlated feature pairs (|r| > 0.5): 0 pairs found
+Top correlated pair: none
+
+Scatter plot note: Fraud cases tend to cluster in specific regions of the PCA feature space,
+suggesting non-linear separability.
+
+Fraud rate by amount decile: ranges from 0.046% to 0.594%,
+with higher amount deciles showing elevated fraud rates.
+
+Key finding: PCA features V14, V17, V12 have the strongest negative correlation with fraud
+(|r| > 0.25), while V4, V11, V2 have the highest feature importance in tree models.

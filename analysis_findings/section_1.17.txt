@@ -1,0 +1,29 @@
+=== Section 1.17 — Final Model Selection and Conclusion ===
+
+FINAL MODEL RECOMMENDATION
+═══════════════════════════
+
+Model:           RF
+Threshold:       0.200
+Cost:            FN=$100, FP=$1 (ratio 100:1)
+
+Performance at optimal threshold:
+  True Positives:   89 (90.8% of fraud caught)
+  False Negatives:  9 (9.2% missed)
+  False Positives:  128
+  True Negatives:   56,736
+
+  Precision: 0.410  Recall: 0.908  F1: 0.565
+  Total Cost Z: $1,028
+
+Business Impact:
+  - Catches 89 out of 98 fraud cases each period
+  - 128 legitimate transactions flagged for review
+  - At assumed costs, total cost is $1,028 per 56,962 transactions
+
+Key Conclusions:
+1. Credit card fraud detection is highly feasible — RF achieves F1 > 0.83
+2. Threshold tuning matters — default 0.5 is rarely optimal for imbalanced data
+3. Cost-based optimization (Z) aligns model choice with business value
+4. PCA features enable strong separation but require non-linear models
+5. SMOTE + threshold tuning > SMOTE alone > no imbalance handling
