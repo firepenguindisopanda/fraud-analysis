@@ -10,7 +10,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score
+from sklearn.metrics import precision_score, recall_score, f1_score
 
 from pipeline import DATASETS, PLOTS_DIR, RESULTS_FILE
 from pipeline.data_loader import load_dataset, run_quality_checks, clean_dataset, sample_dataset
@@ -88,8 +88,8 @@ def process_dataset(dataset_name, info):
 
     print("\n  Confusion matrices:")
     for model_name, obj in fitted_models.items():
-        cm = confusion_matrix(y_test, obj["y_pred"])
         cm_info = compute_confusion_matrix(y_test, obj["y_pred"])
+        cm = np.array([[cm_info["tn"], cm_info["fp"]], [cm_info["fn"], cm_info["tp"]]])
         plot_confusion_matrix(cm, dataset_name, model_name)
         print(f"    {model_name}: TP={cm_info['tp']}, FP={cm_info['fp']}, FN={cm_info['fn']}, TN={cm_info['tn']}")
 
@@ -133,7 +133,7 @@ def process_dataset(dataset_name, info):
     print("  Generating cost heatmap...")
     thresholds = np.arange(0.05, 0.95, 0.05)
     cost_ratios = [1, 5, 10, 50, 100, 500, 1000]
-    best_model_name = results_df.iloc[0]["model"] if len(results_df) > 0 else "XGBoost"
+    best_model_name = results_df.iloc[0]["model"] if len(results_df) > 0 else None
     best_model_prob = fitted_models[best_model_name]["y_prob"] if best_model_name in fitted_models else None
     if best_model_prob is not None:
         cost_matrix = np.zeros((len(cost_ratios), len(thresholds)))
