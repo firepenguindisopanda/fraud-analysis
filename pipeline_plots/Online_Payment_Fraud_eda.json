@@ -1,0 +1,66 @@
+{
+  "dataset": "Online Payment Fraud",
+  "quality": {
+    "shape": [
+      200000,
+      9
+    ],
+    "duplicate_rows": 0,
+    "infinite_values": 0,
+    "constant_columns": [],
+    "near_constant_columns": [
+      "isFraud",
+      "isFlaggedFraud"
+    ],
+    "class_0_count": 199742,
+    "class_1_count": 258,
+    "fraud_rate": 0.00129,
+    "imbalance_ratio": 774.1937984496124,
+    "no_skill_baseline": 0.99871
+  },
+  "eda": {
+    "correlations": {
+      "amount": 0.076,
+      "isFlaggedFraud": 0.0622,
+      "step": 0.0326,
+      "oldbalanceOrg": 0.0128,
+      "newbalanceOrig": -0.006,
+      "oldbalanceDest": -0.0057,
+      "newbalanceDest": 0.0008
+    },
+    "skewness": {
+      "isFlaggedFraud": 447.2136,
+      "amount": 30.8008,
+      "oldbalanceDest": 19.7333,
+      "newbalanceDest": 19.0395,
+      "oldbalanceOrg": 5.2623,
+      "newbalanceOrig": 5.1804,
+      "step": 0.3682
+    },
+    "categorical_fraud_rates": {
+      "overall_rate": 0.0013,
+      "type": {
+        "TRANSFER": {
+          "rate": 0.0077,
+          "count": 16915
+        },
+        "CASH_OUT": {
+          "rate": 0.0018,
+          "count": 70282
+        },
+        "CASH_IN": {
+          "rate": 0.0,
+          "count": 43677
+        },
+        "DEBIT": {
+          "rate": 0.0,
+          "count": 1305
+        },
+        "PAYMENT": {
+          "rate": 0.0,
+          "count": 67821
+        }
+      }
+    }
+  }
+}

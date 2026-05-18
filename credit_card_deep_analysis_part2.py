@@ -164,15 +164,15 @@ CV done on original (non-SMOTEd) data to avoid leakage.
 
 XGBoost:
   Best params: {xgb_best}
-  Default F1: 0.737  →  Tuned F1: {xgb_f1:.3f}  (Recall: 0.816 → {xgb_rec:.3f})
+  Default F1: 0.737  to  Tuned F1: {xgb_f1:.3f}  (Recall: 0.816 to {xgb_rec:.3f})
 
 Random Forest:
   Best params: {rf_best}
-  Default F1: 0.837  →  Tuned F1: {rf_f1:.3f}  (Recall: 0.786 → {rf_rec:.3f})
+  Default F1: 0.837  to  Tuned F1: {rf_f1:.3f}  (Recall: 0.786 to {rf_rec:.3f})
 
 Logistic Regression:
   Best C: {lr_best['C']}
-  Default F1: 0.068  →  Tuned F1: {lr_f1:.3f}  (Recall: 0.847 → {lr_rec:.3f})
+  Default F1: 0.068  to  Tuned F1: {lr_f1:.3f}  (Recall: 0.847 to {lr_rec:.3f})
 
 Tree models show modest gains from tuning (RF already strong at defaults).
 Grid search over deeper trees and more estimators marginally improves XGBoost.
@@ -366,7 +366,7 @@ def section_1_15_cost_opt(tuned_models):
     findings += "Z = 100 × FN + 1 × FP\n\n"
     for _, r in sub.sort_values("cost").iterrows():
         findings += f"  {r['model'].upper():5s}  thresh={r['threshold']:.2f}  Z=${r['cost']:.0f}  F1={r['f1']:.3f}  TP={r['tp']}  FN={r['fn']}  FP={r['fp']}\n"
-    findings += f"\nOptimal: {best_row['model'].upper()} @ {best_row['threshold']:.2f} → Z=${best_row['cost']:.0f}\n"
+    findings += f"\nOptimal: {best_row['model'].upper()} @ {best_row['threshold']:.2f} to Z=${best_row['cost']:.0f}\n"
     findings += f"  Catches {best_row['tp']}/{best_row['tp']+best_row['fn']} fraud ({best_row['recall']:.0%})\n"
     findings += f"  {best_row['fp']} false alarms ({best_row['precision']:.0%} precision)\n"
 

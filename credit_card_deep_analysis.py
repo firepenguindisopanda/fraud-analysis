@@ -255,7 +255,7 @@ Amount IQR Outliers:
   Outlier threshold: ${upper:.2f}
   Total outliers: {len(outliers)} ({len(outliers)/len(df):.2%})
   Fraud cases among outliers: {len(fraud_outliers)} ({len(fraud_outliers)/len(fraud)*100:.1f}% of all fraud)
-  → {len(fraud_outliers)*100/len(fraud):.1f}% of fraud has Amount above ${upper:.2f}
+  to {len(fraud_outliers)*100/len(fraud):.1f}% of fraud has Amount above ${upper:.2f}
 
 LogAmount IQR Outliers:
   Log outliers: {len(log_outliers)} ({len(log_outliers)/len(df):.2%})
@@ -264,7 +264,7 @@ LogAmount IQR Outliers:
 Weirdness Score:
   Non-Fraud mean weirdness: {df_w[df_w[TARGET]==0]['weirdness'].mean():.2f}
   Fraud mean weirdness: {df_w[df_w[TARGET]==1]['weirdness'].mean():.2f}
-  → Fraud cases have significantly higher weirdness scores
+  to Fraud cases have significantly higher weirdness scores
 
 Top 5 V features separating fraud from non-fraud (KS test statistic):
 """
@@ -454,7 +454,7 @@ Best overall: {best_f1['model']} with {best_f1['strategy']} (F1={best_f1['f1']:.
     for strat in res_df["strategy"].unique():
         sub = res_df[res_df["strategy"] == strat]
         row = sub.loc[sub["f1"].idxmax()]
-        findings += f"  {strat:25s} → Best model: {row['model']:3s}  F1={row['f1']:.3f}  Recall={row['recall']:.3f}  Precision={row['precision']:.3f}\n"
+        findings += f"  {strat:25s} to Best model: {row['model']:3s}  F1={row['f1']:.3f}  Recall={row['recall']:.3f}  Precision={row['precision']:.3f}\n"
 
     findings += """
 Key insight: SMOTE generally improves recall at modest precision cost compared to no handling.
@@ -575,17 +575,17 @@ def section_1_12_hyperparameter_tuning(X_train, X_test, y_train, y_test):
 
 XGBoost:
   Best params: {xgb_best}
-  CV F1: {xgb_search.best_score_:.4f}  →  Test F1: {xgb_test_f1:.4f}
+  CV F1: {xgb_search.best_score_:.4f}  to  Test F1: {xgb_test_f1:.4f}
 
 Random Forest:
   Best params: {rf_best}
-  CV F1: {rf_search.best_score_:.4f}  →  Test F1: {rf_test_f1:.4f}
+  CV F1: {rf_search.best_score_:.4f}  to  Test F1: {rf_test_f1:.4f}
 
 Logistic Regression:
   Best C: {lr_best['C']}
-  CV F1: {lr_search.best_score_:.4f}  →  Test F1: {lr_test_f1:.4f}
+  CV F1: {lr_search.best_score_:.4f}  to  Test F1: {lr_test_f1:.4f}
 
-Tuning improved XGBoost from 0.737 → {xgb_test_f1:.3f} and RF from 0.837 → {rf_test_f1:.3f}.
+Tuning improved XGBoost from 0.737 to {xgb_test_f1:.3f} and RF from 0.837 to {rf_test_f1:.3f}.
 The gains are modest for tree models (already strong with defaults).
 """
     write_findings("1.12", findings)
@@ -851,10 +851,10 @@ def section_1_15_cost_optimization(y_test, tuned_models, threshold_results):
         findings += f"TP={row['tp']}  FN={row['fn']}  FP={row['fp']}\n"
 
     findings += f"\nOptimal model: {best_row['model'].upper()} at threshold={best_row['best_threshold']:.2f}\n"
-    findings += f"  → Z=${best_row['cost']:.0f} (${best_row['cost']:,} total cost)\n"
-    findings += f"  → Catches {best_row['tp']}/{best_row['tp']+best_row['fn']} fraud cases "
+    findings += f"  to Z=${best_row['cost']:.0f} (${best_row['cost']:,} total cost)\n"
+    findings += f"  to Catches {best_row['tp']}/{best_row['tp']+best_row['fn']} fraud cases "
     findings += f"({best_row['recall']:.1%} recall)\n"
-    findings += f"  → With {best_row['fp']} false alarms ({best_row['precision']:.1%} precision)\n"
+    findings += f"  to With {best_row['fp']} false alarms ({best_row['precision']:.1%} precision)\n"
 
     findings += f"""
 Cost sensitivity analysis shows the optimal threshold varies with the FN:FP cost ratio:

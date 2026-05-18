@@ -1,0 +1,85 @@
+{
+  "dataset": "Credit Card Fraud",
+  "quality": {
+    "shape": [
+      284807,
+      31
+    ],
+    "duplicate_rows": 1081,
+    "infinite_values": 0,
+    "constant_columns": [],
+    "near_constant_columns": [
+      "Class"
+    ],
+    "class_0_count": 284315,
+    "class_1_count": 492,
+    "fraud_rate": 0.001727485630620034,
+    "imbalance_ratio": 577.8760162601626,
+    "no_skill_baseline": 0.9982725143693799
+  },
+  "eda": {
+    "correlations": {
+      "V17": -0.3265,
+      "V14": -0.3025,
+      "V12": -0.2606,
+      "V10": -0.2169,
+      "V16": -0.1965,
+      "V3": -0.193,
+      "V7": -0.1873,
+      "V11": 0.1549,
+      "V4": 0.1334,
+      "V18": -0.1115
+    },
+    "skewness": {
+      "Amount": 16.9777,
+      "V28": 11.1921,
+      "V8": 8.5219,
+      "V23": 5.8751,
+      "V2": 4.6249,
+      "V17": 3.8449,
+      "V21": 3.593,
+      "V1": 3.2807
+    },
+    "feature_distributions": {
+      "Amount": {
+        "class_0": {
+          "count": 284315,
+          "mean": 88.291,
+          "median": 22.0,
+          "std": 250.1051
+        },
+        "class_1": {
+          "count": 492,
+          "mean": 122.2113,
+          "median": 9.25,
+          "std": 256.6833
+        },
+        "ks_test": {
+          "statistic": 0.2712,
+          "p_value": 2.1703053464297685e-32
+        }
+      },
+      "Time": {
+        "class_0": {
+          "count": 284315,
+          "mean": 94838.2023,
+          "median": 84711.0,
+          "std": 47484.0158
+        },
+        "class_1": {
+          "count": 492,
+          "mean": 80746.8069,
+          "median": 75568.5,
+          "std": 47835.3651
+        },
+        "ks_test": {
+          "statistic": 0.1694,
+          "p_value": 8.73322896894701e-13
+        }
+      }
+    },
+    "categorical_fraud_rates": {
+      "overall_rate": 0.0017
+    }
+  }
+}

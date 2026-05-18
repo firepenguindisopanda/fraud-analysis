@@ -4,11 +4,11 @@ Models tested per strategy: Random Forest (100 trees), XGBoost (100 estimators),
 Strategies compared: No handling, SMOTE, ADASYN, Random Undersample, Class Weight
 
 Best overall: RF with No Handling (F1=0.874)
-  No Handling               → Best model: RF   F1=0.874  Recall=0.816  Precision=0.941
-  SMOTE                     → Best model: RF   F1=0.831  Recall=0.827  Precision=0.835
-  ADASYN                    → Best model: XGB  F1=0.826  Recall=0.847  Precision=0.806
-  Undersample               → Best model: LR   F1=0.098  Recall=0.918  Precision=0.052
-  Class Weight (RF)         → Best model: XGB  F1=0.859  Recall=0.837  Precision=0.882
+  No Handling               to Best model: RF   F1=0.874  Recall=0.816  Precision=0.941
+  SMOTE                     to Best model: RF   F1=0.831  Recall=0.827  Precision=0.835
+  ADASYN                    to Best model: XGB  F1=0.826  Recall=0.847  Precision=0.806
+  Undersample               to Best model: LR   F1=0.098  Recall=0.918  Precision=0.052
+  Class Weight (RF)         to Best model: XGB  F1=0.859  Recall=0.837  Precision=0.882
 
 Key insight: SMOTE generally improves recall at modest precision cost compared to no handling.
 Class weight provides a similar effect without generating synthetic data.

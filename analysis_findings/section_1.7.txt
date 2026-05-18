@@ -4,7 +4,7 @@ Amount IQR Outliers:
   Outlier threshold: $184.51
   Total outliers: 31904 (11.20%)
   Fraud cases among outliers: 91 (18.5% of all fraud)
-  → 18.5% of fraud has Amount above $184.51
+  to 18.5% of fraud has Amount above $184.51
 
 LogAmount IQR Outliers:
   Log outliers: 245 (0.09%)
@@ -13,7 +13,7 @@ LogAmount IQR Outliers:
 Weirdness Score:
   Non-Fraud mean weirdness: 18.77
   Fraud mean weirdness: 86.01
-  → Fraud cases have significantly higher weirdness scores
+  to Fraud cases have significantly higher weirdness scores
 
 Top 5 V features separating fraud from non-fraud (KS test statistic):
   V14: KS=0.8428

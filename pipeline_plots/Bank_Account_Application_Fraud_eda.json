@@ -1,0 +1,140 @@
+{
+  "dataset": "Bank Account Application Fraud",
+  "quality": {
+    "shape": [
+      1000000,
+      32
+    ],
+    "duplicate_rows": 0,
+    "infinite_values": 0,
+    "constant_columns": [
+      "device_fraud_count"
+    ],
+    "near_constant_columns": [
+      "fraud_bool",
+      "email_is_free",
+      "phone_home_valid",
+      "phone_mobile_valid",
+      "has_other_cards",
+      "foreign_request",
+      "source",
+      "keep_alive_session",
+      "device_distinct_emails_8w",
+      "device_fraud_count"
+    ],
+    "class_0_count": 988971,
+    "class_1_count": 11029,
+    "fraud_rate": 0.011029,
+    "imbalance_ratio": 89.67005168192946,
+    "no_skill_baseline": 0.988971
+  },
+  "eda": {
+    "correlations": {
+      "credit_risk_score": 0.0706,
+      "proposed_credit_limit": 0.0689,
+      "customer_age": 0.063,
+      "keep_alive_session": -0.0503,
+      "income": 0.0451,
+      "date_of_birth_distinct_emails_4w": -0.0432,
+      "name_email_similarity": -0.0367,
+      "device_distinct_emails_8w": 0.0357,
+      "has_other_cards": -0.0352,
+      "phone_home_valid": -0.0351
+    },
+    "skewness": {
+      "days_since_request": 9.279,
+      "foreign_request": 6.0533,
+      "prev_address_months_count": 4.0639,
+      "session_length_in_minutes": 3.3046,
+      "bank_branch_count_8w": 2.7472,
+      "intended_balcon_amount": 2.5072,
+      "phone_mobile_valid": 2.4876,
+      "device_distinct_emails_8w": 2.4308
+    },
+    "categorical_fraud_rates": {
+      "overall_rate": 0.011,
+      "payment_type": {
+        "AC": {
+          "rate": 0.0167,
+          "count": 252071
+        },
+        "AB": {
+          "rate": 0.0113,
+          "count": 370554
+        },
+        "AD": {
+          "rate": 0.0108,
+          "count": 118837
+        },
+        "AA": {
+          "rate": 0.0053,
+          "count": 258249
+        },
+        "AE": {
+          "rate": 0.0035,
+          "count": 289
+        }
+      },
+      "employment_status": {
+        "CC": {
+          "rate": 0.0247,
+          "count": 37758
+        },
+        "CG": {
+          "rate": 0.0155,
+          "count": 453
+        },
+        "CA": {
+          "rate": 0.0122,
+          "count": 730252
+        },
+        "CB": {
+          "rate": 0.0069,
+          "count": 138288
+        },
+        "CD": {
+          "rate": 0.0038,
+          "count": 26522
+        },
+        "CE": {
+          "rate": 0.0023,
+          "count": 22693
+        },
+        "CF": {
+          "rate": 0.0019,
+          "count": 44034
+        }
+      },
+      "housing_status": {
+        "BA": {
+          "rate": 0.0375,
+          "count": 169675
+        },
+        "BD": {
+          "rate": 0.0086,
+          "count": 26161
+        },
+        "BC": {
+          "rate": 0.0061,
+          "count": 372143
+        },
+        "BB": {
+          "rate": 0.006,
+          "count": 260965
+        },
+        "BF": {
+          "rate": 0.0042,
+          "count": 1669
+        },
+        "BG": {
+          "rate": 0.004,
+          "count": 252
+        },
+        "BE": {
+          "rate": 0.0034,
+          "count": 169135
+        }
+      }
+    }
+  }
+}
