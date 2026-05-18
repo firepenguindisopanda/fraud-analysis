@@ -202,3 +202,180 @@ def plot_summary_charts(all_results):
         ax.spines[["top", "right"]].set_visible(False)
         ax.set_ylim(0, min(1.0, max(pivot.max()) * 1.25))
         _save(fig, f"summary_{metric}.png")
+
+
+def plot_roc_curves(y_test, models_dict, dataset_name):
+    from sklearn.metrics import roc_curve, auc
+    fig, ax = plt.subplots(figsize=(8, 6))
+    for model_name, obj in models_dict.items():
+        if obj["y_prob"] is None:
+            continue
+        fpr, tpr, _ = roc_curve(y_test, obj["y_prob"])
+        roc_auc = auc(fpr, tpr)
+        color = MODEL_COLORS.get(model_name, "#333333")
+        ax.plot(fpr, tpr, color=color, linewidth=2, label=f"{model_name} (AUC = {roc_auc:.3f})")
+    ax.plot([0, 1], [0, 1], "k--", linewidth=1, alpha=0.5, label="Random")
+    ax.set_xlabel("False Positive Rate", fontsize=11)
+    ax.set_ylabel("True Positive Rate", fontsize=11)
+    ax.set_title(f"{dataset_name}\nROC Curves - Model Comparison", fontsize=13, fontweight="bold")
+    ax.legend(fontsize=8, loc="lower right")
+    ax.spines[["top", "right"]].set_visible(False)
+    _save(fig, f"{slug(dataset_name)}_roc_curves.png")
+
+
+def plot_pr_curves(y_test, models_dict, dataset_name):
+    from sklearn.metrics import precision_recall_curve, average_precision_score
+    fig, ax = plt.subplots(figsize=(8, 6))
+    for model_name, obj in models_dict.items():
+        if obj["y_prob"] is None:
+            continue
+        precision, recall, _ = precision_recall_curve(y_test, obj["y_prob"])
+        avg_pr = average_precision_score(y_test, obj["y_prob"])
+        color = MODEL_COLORS.get(model_name, "#333333")
+        ax.plot(recall, precision, color=color, linewidth=2, label=f"{model_name} (AP = {avg_pr:.3f})")
+    fraud_rate = y_test.mean()
+    ax.axhline(fraud_rate, color="gray", linestyle=":", linewidth=1, alpha=0.5, label=f"No-skill (PR = {fraud_rate:.3f})")
+    ax.set_xlabel("Recall", fontsize=11)
+    ax.set_ylabel("Precision", fontsize=11)
+    ax.set_title(f"{dataset_name}\nPrecision-Recall Curves - Model Comparison", fontsize=13, fontweight="bold")
+    ax.legend(fontsize=8, loc="lower left")
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.set_xlim(0, 1.05)
+    ax.set_ylim(0, 1.05)
+    _save(fig, f"{slug(dataset_name)}_pr_curves.png")
+
+
+def plot_cost_heatmap(cost_matrix, thresholds, cost_ratios, dataset_name):
+    fig, ax = plt.subplots(figsize=(10, 6))
+    im = ax.imshow(cost_matrix, cmap="YlOrRd", aspect="auto")
+    ax.set_xticks(range(len(thresholds)))
+    ax.set_yticks(range(len(cost_ratios)))
+    ax.set_xticklabels([f"{t:.2f}" for t in thresholds], fontsize=8, rotation=45, ha="right")
+    ax.set_yticklabels([f"1:{r}" for r in cost_ratios], fontsize=9)
+    for i in range(len(cost_ratios)):
+        for j in range(len(thresholds)):
+            val = cost_matrix[i, j]
+            ax.text(j, i, f"${val:,.0f}", ha="center", va="center", fontsize=7, color="white" if val > cost_matrix.max() * 0.5 else "black")
+    ax.set_xlabel("Decision Threshold", fontsize=11)
+    ax.set_ylabel("Cost Ratio (FN:FP)", fontsize=11)
+    ax.set_title(f"{dataset_name}\nTotal Cost Heatmap (Threshold x Cost Ratio)", fontsize=13, fontweight="bold")
+    fig.colorbar(im, ax=ax, label="Total Cost ($)")
+    fig.tight_layout()
+    _save(fig, f"{slug(dataset_name)}_cost_heatmap.png")
+
+
+def plot_radar_comparison(metrics_dict, dataset_name):
+    categories = ["Precision", "Recall", "F1", "ROC-AUC"]
+    N = len(categories)
+    angles = [n / N * 2 * np.pi for n in range(N)]
+    angles += angles[:1]
+    fig, ax = plt.subplots(figsize=(7, 7), subplot_kw=dict(polar=True))
+    for model_name, metrics in metrics_dict.items():
+        values = [metrics.get("precision", 0), metrics.get("recall", 0), metrics.get("f1", 0), metrics.get("roc_auc", 0)]
+        values += values[:1]
+        color = MODEL_COLORS.get(model_name, "#333333")
+        ax.plot(angles, values, "o-", linewidth=2, label=model_name, color=color)
+        ax.fill(angles, values, alpha=0.1, color=color)
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(categories, fontsize=10)
+    ax.set_ylim(0, 1)
+    ax.set_title(f"{dataset_name}\nModel Performance Radar", fontsize=13, fontweight="bold", pad=20)
+    ax.legend(fontsize=8, loc="upper right", bbox_to_anchor=(1.3, 1.1))
+    _save(fig, f"{slug(dataset_name)}_radar.png")
+
+
+def plot_business_impact(results_dict, dataset_name, fn_cost=100, fp_cost=1):
+    models = list(results_dict.keys())
+    fraud_caught = [r["tp"] * fn_cost for r in results_dict.values()]
+    false_alarms = [r["fp"] * fp_cost for r in results_dict.values()]
+    missed_fraud = [r["fn"] * fn_cost for r in results_dict.values()]
+    x = np.arange(len(models))
+    width = 0.25
+    fig, ax = plt.subplots(figsize=(10, 5))
+    bars1 = ax.bar(x - width, fraud_caught, width, label="Fraud Caught (value saved)", color="#2ecc71", edgecolor="white")
+    bars2 = ax.bar(x, false_alarms, width, label="False Alarms (cost)", color="#f39c12", edgecolor="white")
+    bars3 = ax.bar(x + width, missed_fraud, width, label="Missed Fraud (cost)", color="#e74c3c", edgecolor="white")
+    for bars in [bars1, bars2, bars3]:
+        for bar in bars:
+            height = bar.get_height()
+            if height > 0:
+                ax.text(bar.get_x() + bar.get_width() / 2, height, f"${height:,.0f}", ha="center", va="bottom", fontsize=7, rotation=0)
+    ax.set_xticks(x)
+    ax.set_xticklabels([m.replace(" (", "\n(") for m in models], fontsize=8)
+    ax.set_ylabel("Cost ($)", fontsize=11)
+    ax.set_title(f"{dataset_name}\nBusiness Impact Analysis\n(FN=${fn_cost}, FP=${fp_cost})", fontsize=13, fontweight="bold")
+    ax.legend(fontsize=8)
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda x, _: f"${x:,.0f}"))
+    _save(fig, f"{slug(dataset_name)}_business_impact.png")
+
+
+def plot_temporal_fraud(df, target_col, dataset_name, time_col="Time"):
+    if time_col not in df.columns:
+        return
+    df_temp = df.copy()
+    df_temp["hour"] = (df_temp[time_col] / 3600).astype(int) % 24
+    hourly = df_temp.groupby("hour")[target_col].agg(["mean", "count"])
+    hourly.columns = ["fraud_rate", "count"]
+    fig, ax1 = plt.subplots(figsize=(10, 5))
+    color1 = FRAUD_COLOR
+    ax1.set_xlabel("Hour of Day", fontsize=11)
+    ax1.set_ylabel("Fraud Rate (%)", color=color1, fontsize=11)
+    ax1.plot(hourly.index, hourly["fraud_rate"] * 100, color=color1, linewidth=2, marker="o", markersize=4)
+    ax1.tick_params(axis="y", labelcolor=color1)
+    ax1.set_title(f"{dataset_name}\nFraud Rate by Hour of Day", fontsize=13, fontweight="bold")
+    ax2 = ax1.twinx()
+    color2 = NON_FRAUD_COLOR
+    ax2.set_ylabel("Transaction Count", color=color2, fontsize=11)
+    ax2.bar(hourly.index, hourly["count"], color=color2, alpha=0.3)
+    ax2.tick_params(axis="y", labelcolor=color2)
+    fig.tight_layout()
+    _save(fig, f"{slug(dataset_name)}_temporal_fraud.png")
+
+
+def plot_feature_importance_comparison(all_importances, dataset_name):
+    models = list(all_importances.keys())
+    all_features = set()
+    for imp_list in all_importances.values():
+        for name, _ in imp_list:
+            all_features.add(name)
+    top_features = list(all_features)[:10]
+    x = np.arange(len(top_features))
+    width = 0.8 / len(models)
+    fig, ax = plt.subplots(figsize=(10, 5))
+    for mi, model_name in enumerate(models):
+        imp_dict = {name: val for name, val in all_importances[model_name]}
+        vals = [imp_dict.get(f, 0) for f in top_features]
+        color = MODEL_COLORS.get(model_name, "#333333")
+        offset = (mi - (len(models) - 1) / 2) * width
+        ax.bar(x + offset, vals, width, label=model_name, color=color, edgecolor="white", alpha=0.85)
+    ax.set_xticks(x)
+    ax.set_xticklabels(top_features, fontsize=8, rotation=45, ha="right")
+    ax.set_ylabel("Importance", fontsize=11)
+    ax.set_title(f"{dataset_name}\nFeature Importance Comparison Across Models", fontsize=13, fontweight="bold")
+    ax.legend(fontsize=8)
+    ax.spines[["top", "right"]].set_visible(False)
+    _save(fig, f"{slug(dataset_name)}_feature_comparison.png")
+
+
+def plot_threshold_sensitivity(threshold_results, dataset_name):
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    for model_name, color in MODEL_COLORS.items():
+        if model_name.startswith("Dummy"):
+            continue
+        model_data = threshold_results[threshold_results["model"] == model_name]
+        if model_data.empty:
+            continue
+        axes[0].plot(model_data["threshold"], model_data["precision"], color=color, linewidth=2, label=model_name)
+        axes[1].plot(model_data["threshold"], model_data["recall"], color=color, linewidth=2, label=model_name)
+        axes[2].plot(model_data["threshold"], model_data["f1"], color=color, linewidth=2, label=model_name)
+    for ax, title in [(axes[0], "Precision"), (axes[1], "Recall"), (axes[2], "F1 Score")]:
+        ax.axvline(0.5, color="gray", linestyle=":", alpha=0.5, label="Default (0.5)")
+        ax.set_xlabel("Threshold", fontsize=11)
+        ax.set_ylabel("Score", fontsize=11)
+        ax.set_title(f"{dataset_name}\n{title} vs Threshold", fontsize=12, fontweight="bold")
+        ax.legend(fontsize=7)
+        ax.spines[["top", "right"]].set_visible(False)
+        ax.set_ylim(-0.05, 1.05)
+    fig.tight_layout()
+    _save(fig, f"{slug(dataset_name)}_threshold_sensitivity.png")
