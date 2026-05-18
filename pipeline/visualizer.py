@@ -246,6 +246,8 @@ def plot_pr_curves(y_test, models_dict, dataset_name):
 
 
 def plot_cost_heatmap(cost_matrix, thresholds, cost_ratios, dataset_name):
+    if cost_matrix.size == 0:
+        return
     fig, ax = plt.subplots(figsize=(10, 6))
     im = ax.imshow(cost_matrix, cmap="YlOrRd", aspect="auto")
     ax.set_xticks(range(len(thresholds)))
@@ -265,6 +267,8 @@ def plot_cost_heatmap(cost_matrix, thresholds, cost_ratios, dataset_name):
 
 
 def plot_radar_comparison(metrics_dict, dataset_name):
+    if not metrics_dict:
+        return
     categories = ["Precision", "Recall", "F1", "ROC-AUC"]
     N = len(categories)
     angles = [n / N * 2 * np.pi for n in range(N)]
@@ -286,9 +290,9 @@ def plot_radar_comparison(metrics_dict, dataset_name):
 
 def plot_business_impact(results_dict, dataset_name, fn_cost=100, fp_cost=1):
     models = list(results_dict.keys())
-    fraud_caught = [r["tp"] * fn_cost for r in results_dict.values()]
-    false_alarms = [r["fp"] * fp_cost for r in results_dict.values()]
-    missed_fraud = [r["fn"] * fn_cost for r in results_dict.values()]
+    fraud_caught = [r.get("tp", 0) * fn_cost for r in results_dict.values()]
+    false_alarms = [r.get("fp", 0) * fp_cost for r in results_dict.values()]
+    missed_fraud = [r.get("fn", 0) * fn_cost for r in results_dict.values()]
     x = np.arange(len(models))
     width = 0.25
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -335,11 +339,11 @@ def plot_temporal_fraud(df, target_col, dataset_name, time_col="Time"):
 
 def plot_feature_importance_comparison(all_importances, dataset_name):
     models = list(all_importances.keys())
-    all_features = set()
+    feature_max_imp = {}
     for imp_list in all_importances.values():
-        for name, _ in imp_list:
-            all_features.add(name)
-    top_features = list(all_features)[:10]
+        for name, val in imp_list:
+            feature_max_imp[name] = max(feature_max_imp.get(name, 0), val)
+    top_features = sorted(feature_max_imp, key=feature_max_imp.get, reverse=True)[:10]
     x = np.arange(len(top_features))
     width = 0.8 / len(models)
     fig, ax = plt.subplots(figsize=(10, 5))
