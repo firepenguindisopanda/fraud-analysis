@@ -3,7 +3,6 @@ Fraud Detection Pipeline Package
 Modular pipeline for multi-dataset fraud analysis.
 """
 
-import os
 from pathlib import Path
 
 PLOTS_DIR = Path("pipeline_plots")
@@ -31,5 +30,6 @@ FRAUD_COLOR = "#d62728"
 NON_FRAUD_COLOR = "#1f77b4"
 
 
-def slug(name):
+def slug(name: str) -> str:
+    """Convert a display name to a filename-safe slug."""
     return name.replace(" ", "_").replace("(", "").replace(")", "")
