@@ -14,7 +14,7 @@ def log_transform_skewed(df, threshold=1.0):
     df = df.copy()
     transformed = []
     for col in df.select_dtypes(include=["number"]).columns:
-        if abs(df[col].skew()) > threshold:
+        if abs(df[col].skew()) > threshold and (df[col] >= 0).all():
             df[col] = np.log1p(df[col])
             df[col] = df[col].replace([np.inf, -np.inf], np.nan)
             transformed.append(col)
@@ -32,11 +32,19 @@ def impute_missing(df):
             if pd.api.types.is_numeric_dtype(df[col]):
                 df[col] = df[col].fillna(df[col].median())
             else:
-                df[col] = df[col].fillna(df[col].mode()[0])
+                mode_val = df[col].mode()
+                if not mode_val.empty:
+                    df[col] = df[col].fillna(mode_val[0])
     return df
 
 
 def prepare_data(df, target_col, test_size=0.2, random_state=42, apply_smote=True):
+    """Full preprocessing pipeline.
+
+    Returns:
+        (X_train_processed, X_test, X_train_scaled, X_test_scaled,
+         y_train_processed, y_test, info_dict)
+    """
     df = df.copy()
     X = df.drop(columns=[target_col])
     y = df[target_col]
@@ -52,12 +60,12 @@ def prepare_data(df, target_col, test_size=0.2, random_state=42, apply_smote=Tru
     info["test_fraud_rate"] = float(y_test.mean())
     if apply_smote and y_train.sum() > 0:
         smote = SMOTE(random_state=random_state)
-        X_train_smote, y_train_smote = smote.fit_resample(X_train, y_train)
-        info["after_smote"] = dict(Counter(y_train_smote))
+        X_train_processed, y_train_processed = smote.fit_resample(X_train, y_train)
+        info["train_class_distribution"] = dict(Counter(y_train_processed))
     else:
-        X_train_smote, y_train_smote = X_train.copy(), y_train.copy()
-        info["after_smote"] = dict(Counter(y_train_smote))
+        X_train_processed, y_train_processed = X_train.copy(), y_train.copy()
+        info["train_class_distribution"] = dict(Counter(y_train_processed))
     scaler = StandardScaler()
-    X_train_scaled = pd.DataFrame(scaler.fit_transform(X_train_smote), columns=X_train_smote.columns)
+    X_train_scaled = pd.DataFrame(scaler.fit_transform(X_train_processed), columns=X_train_processed.columns)
     X_test_scaled = pd.DataFrame(scaler.transform(X_test), columns=X_test.columns)
-    return X_train_smote, X_test, X_train_scaled, X_test_scaled, y_train_smote, y_test, info
+    return X_train_processed, X_test, X_train_scaled, X_test_scaled, y_train_processed, y_test, info
