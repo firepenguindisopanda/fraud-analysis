@@ -28,7 +28,7 @@ def run_quality_checks(df, target_col):
         "class_0_count": int(class_counts.get(0, 0)),
         "class_1_count": fraud_count, "fraud_rate": fraud_rate,
         "imbalance_ratio": imbalance_ratio,
-        "no_skill_baseline": class_counts.max() / total if total > 0 else 0,
+        "no_skill_baseline": class_counts.max() / total if len(class_counts) > 0 and total > 0 else 0,
     }
 
 
@@ -58,5 +58,9 @@ def sample_dataset(df, target_col, sample_size, random_state=42):
     original_size = len(df)
     if original_size <= sample_size:
         return df, original_size
-    sampled, _ = train_test_split(df, train_size=sample_size, stratify=df[target_col], random_state=random_state)
+    min_class_count = df[target_col].value_counts().min()
+    if min_class_count < 2:
+        sampled, _ = train_test_split(df, train_size=sample_size, random_state=random_state)
+    else:
+        sampled, _ = train_test_split(df, train_size=sample_size, stratify=df[target_col], random_state=random_state)
     return sampled, original_size
