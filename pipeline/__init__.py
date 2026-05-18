@@ -7,7 +7,7 @@ from pathlib import Path
 
 PLOTS_DIR = Path("pipeline_plots")
 PLOTS_DIR.mkdir(exist_ok=True)
-RESULTS_FILE = "pipeline_results.csv"
+RESULTS_FILE = Path("pipeline_results.csv")
 REPORT_DIR = Path("report")
 REPORT_DIR.mkdir(exist_ok=True)
 REPORT_ASSETS_DIR = REPORT_DIR / "report_assets"

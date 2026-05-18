@@ -10,7 +10,10 @@ from pathlib import Path
 
 import pandas as pd
 
-from pipeline import PLOTS_DIR, RESULTS_FILE, REPORT_DIR, REPORT_ASSETS_DIR, slug
+from pipeline import PLOTS_DIR, RESULTS_FILE, REPORT_DIR, REPORT_ASSETS_DIR, slug, DATASETS
+
+
+DATASET_SLUGS = [slug(name) for name in DATASETS]
 
 
 def copy_plots_for_report():
@@ -198,7 +201,7 @@ def generate_html(results, eda_data, plot_files):
             <h3>4.5 Confusion Matrices</h3>
             <div class="plot-grid">"""
 
-    for ds in ["Credit_Card_Fraud", "Online_Payment_Fraud", "Bank_Account_Application_Fraud"]:
+    for ds in DATASET_SLUGS:
         for model in ["Random_Forest", "XGBoost", "Logistic_Regression"]:
             html += f"""
                 <div class="plot-card"><img src="report_assets/{ds}_{model}_cm.png" alt="{ds} {model} CM"><p>{model.replace('_', ' ')} - {ds.replace('_', ' ')}</p></div>"""
