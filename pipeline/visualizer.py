@@ -30,7 +30,7 @@ def plot_class_distribution(df, target_col, dataset_name):
     for i, (bar, c) in enumerate(zip(bar_containers, bars)):
         pct = pcts[classes[i]]
         ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height(), f"{c:,}\n({pct:.2%})", ha="center", va="bottom", fontsize=11, fontweight="bold")
-    imbalance = counts[0] / max(counts.get(1, 1), 1)
+    imbalance = counts.get(0, 0) / max(counts.get(1, 1), 1)
     ax.text(0.5, 0.92, f"Imbalance ratio: {imbalance:.0f}:1  -  Fraud is {pcts.get(1, 0):.3%} of data", transform=ax.transAxes, ha="center", fontsize=10, bbox=dict(facecolor="yellow", alpha=0.3, boxstyle="round,pad=0.3"))
     ax.set_title(f"{dataset_name}\nFraud vs Non-Fraud Transaction Counts", fontsize=13, fontweight="bold")
     ax.set_ylabel("Number of Transactions")
@@ -58,7 +58,7 @@ def plot_correlations(df, target_col, dataset_name, top_n=10):
     ax.axvline(0, color="black", linewidth=0.6)
     ax.set_yticks(range(len(vals_sorted)))
     ax.set_yticklabels(names_sorted, fontsize=9)
-    ax.set_title(f"{dataset_name}\nTop {top_n} Feature Correlations with Target", fontsize=12, fontweight="bold")
+    ax.set_title(f"{dataset_name}\nTop {top_n} Feature Correlations with Target\n(Positive = more fraud when feature increases)", fontsize=12, fontweight="bold")
     ax.set_xlabel("Pearson Correlation")
     ax.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:+.2f}"))
     ax.spines[["top", "right"]].set_visible(False)
