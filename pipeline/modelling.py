@@ -30,7 +30,7 @@ def get_training_data(model_name, X_train, X_test, X_train_scaled, X_test_scaled
         return X_train, X_test
 
 
-def train_and_evaluate(X_train, X_test, X_train_scaled, X_test_scaled, y_train, y_test):
+def train_and_evaluate(X_train, X_test, X_train_scaled, X_test_scaled, y_train, y_test, dataset_name=None):
     models = get_models()
     rows = []
     fitted_models = {}
@@ -39,15 +39,34 @@ def train_and_evaluate(X_train, X_test, X_train_scaled, X_test_scaled, y_train, 
         model.fit(train_X, y_train)
         y_pred = model.predict(test_X)
         y_prob = model.predict_proba(test_X)[:, 1] if hasattr(model, "predict_proba") else None
-        rows.append({"dataset": None, "model": model_name, "accuracy": accuracy_score(y_test, y_pred), "precision": precision_score(y_test, y_pred, zero_division=0), "recall": recall_score(y_test, y_pred, zero_division=0), "f1": f1_score(y_test, y_pred, zero_division=0), "roc_auc": roc_auc_score(y_test, y_prob) if y_prob is not None else np.nan})
+        metrics = {
+            "dataset": dataset_name,
+            "model": model_name,
+            "accuracy": accuracy_score(y_test, y_pred),
+            "precision": precision_score(y_test, y_pred, zero_division=0),
+            "recall": recall_score(y_test, y_pred, zero_division=0),
+            "f1": f1_score(y_test, y_pred, zero_division=0),
+            "roc_auc": roc_auc_score(y_test, y_prob) if y_prob is not None else np.nan,
+        }
+        rows.append(metrics)
         fitted_models[model_name] = {"model": model, "y_pred": y_pred, "y_prob": y_prob}
-    return pd.DataFrame(rows), fitted_models
+    return pd.DataFrame(rows).sort_values("f1", ascending=False), fitted_models
+
+
+def _safe_divide(num, denom):
+    return num / denom if denom > 0 else float("nan")
 
 
 def compute_confusion_matrix(y_test, y_pred):
     cm = confusion_matrix(y_test, y_pred)
     tn, fp, fn, tp = cm.ravel()
-    return {"tn": int(tn), "fp": int(fp), "fn": int(fn), "tp": int(tp), "sensitivity": tp / max(tp + fn, 1), "specificity": tn / max(tn + fp, 1), "precision": tp / max(tp + fp, 1), "fpr": fp / max(fp + tn, 1)}
+    return {
+        "tn": int(tn), "fp": int(fp), "fn": int(fn), "tp": int(tp),
+        "sensitivity": _safe_divide(tp, tp + fn),
+        "specificity": _safe_divide(tn, tn + fp),
+        "precision": _safe_divide(tp, tp + fp),
+        "fpr": _safe_divide(fp, fp + tn),
+    }
 
 
 def compute_roc_pr_curves(y_test, y_prob):
@@ -59,7 +78,7 @@ def compute_roc_pr_curves(y_test, y_prob):
 def get_feature_importance(model, feature_names, top_n=15):
     if hasattr(model, "feature_importances_"):
         importances = model.feature_importances_
-        importance_type = "gini"
+        importance_type = "gain" if type(model).__module__.startswith("xgboost") else "gini"
     elif hasattr(model, "coef_"):
         coef = model.coef_
         if coef.ndim > 1 and coef.shape[0] == 1:
