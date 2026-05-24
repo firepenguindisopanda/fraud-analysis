@@ -29,7 +29,7 @@ python run_pipeline.py
 
 Runs EDA -> preprocessing -> SMOTE -> train 5 models -> confusion matrices -> feature importance -> cross-dataset summary for all three datasets. Outputs to `pipeline_plots/` and `pipeline_results.csv`.
 
-### Credit Card Deep Analysis (sections 1.6–1.11)
+### Credit Card Deep Analysis (sections 1.6-1.11)
 
 ```bash
 python credit_card_deep_analysis.py
@@ -37,13 +37,13 @@ python credit_card_deep_analysis.py
 
 Deep-dive into the Credit Card dataset: multivariate correlations, weirdness scores, SMOTE/ADASYN/undersample experiments, baselines, and class-weight comparisons.
 
-### Credit Card Deep Analysis Part 2 (sections 1.12–1.17)
+### Credit Card Deep Analysis Part 2 (sections 1.12-1.17)
 
 ```bash
 python credit_card_deep_analysis_part2.py
 ```
 
-Model tuning (GridSearchCV across RF/XGB/LR), threshold sweep (0.05–0.95), cost optimization with Z = cost_fn × FN + cost_fp × FP across 7 cost ratios (1:1 to 1000:1), and threshold stability refinement.
+Model tuning (GridSearchCV across RF/XGB/LR), threshold sweep (0.05-0.95), cost optimization with Z = cost_fn × FN + cost_fp × FP across 7 cost ratios (1:1 to 1000:1), and threshold stability refinement.
 
 ## Pipeline Overview
 
@@ -90,9 +90,9 @@ Without SMOTE, Logistic Regression catches near-zero fraud cases. SMOTE oversamp
 
 ### 4. Threshold Tuning is Critical
 
-The default 0.5 decision threshold is rarely optimal for imbalanced data. Sweeping thresholds from 0.05–0.95 reveals:
+The default 0.5 decision threshold is rarely optimal for imbalanced data. Sweeping thresholds from 0.05-0.95 reveals:
 
-- Lower thresholds (0.10–0.25) improve recall at the cost of precision
+- Lower thresholds (0.10-0.25) improve recall at the cost of precision
 - The "optimal" threshold depends entirely on business cost preferences
 - A tuned threshold beats default 0.5 on every metric for every model
 
